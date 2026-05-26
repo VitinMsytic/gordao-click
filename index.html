@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🍔 Click do Gordão XJ</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: #1b1b1b;
+  color: white;
+  overflow: hidden;
+}
+
+.container {
+  display: flex;
+  height: 100vh;
+}
+
+.esquerda {
+  width: 35%;
+  background: linear-gradient(#3b1f0e, #111);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-right: 5px solid #000;
+  position: relative;
+}
+
+.meio {
+  width: 40%;
+  background: linear-gradient(#222, #111);
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.direita {
+  width: 25%;
+  background: #2a2a2a;
+  border-left: 5px solid #000;
+  overflow-y: auto;
+}
+
+#titulo {
+  font-size: 45px;
+  margin-bottom: 10px;
+  text-shadow: 0 0 20px orange;
+}
+
+#calorias {
+  font-size: 35px;
+  margin-bottom: 10px;
+}
+
+#porSegundo {
+  font-size: 22px;
+  color: #ffcc80;
+  margin-bottom: 20px;
+}
+
+#gordao {
+  width: 300px;
+  cursor: pointer;
+  transition: 0.1s;
+  border-radius: 20px;
+  box-shadow: 0 0 30px black;
+}
+
+#gordao:hover {
+  transform: scale(1.03);
+}
+
+#gordao:active {
+  transform: scale(0.92);
+}
+
+.lojaTitulo {
+  background: #111;
+  padding: 20px;
+  text-align: center;
+  font-size: 35px;
+  border-bottom: 3px solid #000;
+}
+
+.item {
+  padding: 15px;
+  border-bottom: 2px solid #111;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.item:hover {
+  background: #444;
+}
+
+.item h2 {
+  font-size: 22px;
+}
+
+.item p {
+  color: #ddd;
+}
+
+.evento {
+  background: rgba(255,255,255,0.08);
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 12px;
+  animation: aparecer 0.5s;
+}
+
+.botaoReset {
+  margin-top: 20px;
+  background: crimson;
+  border: none;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.botaoReset:hover {
+  background: red;
+}
+
+.efeito {
+  position: absolute;
+  font-size: 35px;
+  pointer-events: none;
+  animation: subir 1s forwards;
+}
+
+@keyframes subir {
+  from {
+    opacity: 1;
+    transform: translateY(0px);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(-120px);
+  }
+}
+
+@keyframes aparecer {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0px);
+  }
+}
+
+.treme {
+  animation: tremer 0.2s;
+}
+
+@keyframes tremer {
+  0% { transform: translateX(0px); }
+  25% { transform: translateX(5px); }
+  50% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+  100% { transform: translateX(0px); }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="esquerda">
+    <div id="titulo">🍔 CLICK DO GORDÃO XJ</div>
+
+    <div id="calorias">0 calorias</div>
+
+    <div id="porSegundo">0 calorias por segundo</div>
+
+    <img id="gordao" src="images.jpg" onclick="clicar(event)">
+
+    <button class="botaoReset" onclick="resetar()">
+      🔄 RESETAR JOGO
+    </button>
+  </div>
+
+  <div class="meio">
+    <h1>📢 Eventos</h1>
+
+    <div id="eventos"></div>
+  </div>
+
+  <div class="direita">
+    <div class="lojaTitulo">🛒 Loja</div>
+
+    <div class="item" onclick="comprar('pizza', 50, 1)">
+      <h2>🍕 Pizza Suprema</h2>
+      <p>+1 por clique | 50 calorias</p>
+    </div>
+
+    <div class="item" onclick="comprar('refri', 200, 5)">
+      <h2>🥤 Refri Gigante</h2>
+      <p>+5 por clique | 200 calorias</p>
+    </div>
+
+    <div class="item" onclick="comprar('moto', 1000, 25)">
+      <h2>🛵 Moto do Lanche</h2>
+      <p>+25 por clique | 1000 calorias</p>
+    </div>
+
+    <div class="item" onclick="comprar('rodizio', 5000, 100)">
+      <h2>🍔 Rodízio Infinito</h2>
+      <p>+100 por clique | 5000 calorias</p>
+    </div>
+
+    <div class="item" onclick="comprar('ifood', 15000, 500)">
+      <h2>🛵 Ifood Supremo</h2>
+      <p>+500 por clique | 15000 calorias</p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+let calorias = 0;
+let porClique = 1;
+let cps = 0;
+
+function atualizar() {
+  document.getElementById('calorias').innerText = calorias + ' calorias';
+  document.getElementById('porSegundo').innerText = cps + ' calorias por segundo';
+
+  localStorage.setItem('calorias', calorias);
+  localStorage.setItem('porClique', porClique);
+  localStorage.setItem('cps', cps);
+}
+
+function clicar(event) {
+  calorias += porClique;
+
+  atualizar();
+  efeitoClique(event.clientX, event.clientY);
+
+  document.body.classList.add('treme');
+
+  setTimeout(() => {
+    document.body.classList.remove('treme');
+  }, 200);
+}
+
+function efeitoClique(x, y) {
+  let efeito = document.createElement('div');
+
+  efeito.classList.add('efeito');
+  efeito.innerText = '+' + porClique + '🍔';
+
+  efeito.style.left = x + 'px';
+  efeito.style.top = y + 'px';
+
+  document.body.appendChild(efeito);
+
+  setTimeout(() => {
+    efeito.remove();
+  }, 1000);
+}
+
+function comprar(nome, preco, bonus) {
+  if (calorias >= preco) {
+    calorias -= preco;
+
+    porClique += bonus;
+    cps += Math.floor(bonus / 2);
+
+    criarEvento('✅ Você comprou ' + nome + '!');
+
+    atualizar();
+  } else {
+    criarEvento('❌ Calorias insuficientes!');
+  }
+}
+
+function criarEvento(texto) {
+  let area = document.getElementById('eventos');
+
+  let div = document.createElement('div');
+
+  div.classList.add('evento');
+  div.innerText = texto;
+
+  area.prepend(div);
+}
+
+function resetar() {
+  let confirmar = confirm('⚠️ Resetar tudo?');
+
+  if (confirmar) {
+    calorias = 0;
+    porClique = 1;
+    cps = 0;
+
+    atualizar();
+
+    localStorage.clear();
+
+    criarEvento('🔄 Jogo resetado!');
+  }
+}
+
+setInterval(() => {
+  calorias += cps;
+  atualizar();
+}, 1000);
+
+function carregar() {
+  calorias = Number(localStorage.getItem('calorias')) || 0;
+  porClique = Number(localStorage.getItem('porClique')) || 1;
+  cps = Number(localStorage.getItem('cps')) || 0;
+
+  atualizar();
+
+  criarEvento('🍔 Bem-vindo ao Click do Gordão XJ');
+}
+
+setInterval(() => {
+  let eventos = [
+    '⚡ Promoção do Ifood!',
+    '🍕 Rodízio liberado!',
+    '🥤 Refri em dobro!',
+    '🚨 Nutricionista apareceu!',
+    '🔥 Combo lendário desbloqueado!'
+  ];
+
+  let aleatorio = eventos[Math.floor(Math.random() * eventos.length)];
+
+  criarEvento(aleatorio);
+}, 15000);
+
+carregar();
+</script>
+
+</body>
+</html>
